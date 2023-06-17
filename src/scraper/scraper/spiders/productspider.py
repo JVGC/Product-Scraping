@@ -1,10 +1,13 @@
+"""Product Spider"""
 from scrapy import Spider, Request
 from scrapy.http.response.html import HtmlResponse
 
-from scraper.scraper.items import ScraperItem
+from scraper.scraper.items import ProductItem
 
 
 class ProductSpider(Spider):
+    """Product Spider Class"""
+
     name = "products"
     start_urls = ["https://world.openfoodfacts.org/"]
 
@@ -20,7 +23,8 @@ class ProductSpider(Spider):
             )
 
     def parse_product(self, response, url, product_name):
-        product = ScraperItem()
+        """Scrap Each Product"""
+        product = ProductItem()
         product["url"] = url
         product["code"] = response.css("p#barcode_paragraph").css("span::text").get()
         product["barcode"] = product["code"] + " (EAN / EAN-13) "

@@ -1,16 +1,13 @@
+""" Django Product Model """
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
 
-x = [
-    {
-        "imported_t": "2020-02-07T16:00:00Z",
-    }
-]
-
 
 class Product(models.Model):
+    """Django Product Model"""
+
     code = models.CharField(max_length=100)
     product_name = models.CharField(max_length=100)
     url = models.URLField()
@@ -24,6 +21,8 @@ class Product(models.Model):
     imported_t = models.DateTimeField(verbose_name="imported_time")
 
     class Status(models.TextChoices):
+        """Product Status Enum"""
+
         DRAFTED = "DR", _("Drafted")
         IMPORTED = "IM", _("Imported")
 
