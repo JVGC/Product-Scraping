@@ -13,10 +13,10 @@ class Product(models.Model):
     url = models.URLField()
     image_url = models.URLField()
     barcode = models.CharField(max_length=100)
-    brands = models.CharField(max_length=100)
-    packaging = models.CharField(max_length=100)
-    quantity = models.CharField(max_length=100)
-    categories = models.CharField(max_length=100)
+    brands = models.CharField(max_length=300)
+    packaging = models.CharField(max_length=300)
+    quantity = models.CharField(max_length=50)
+    categories = models.CharField(max_length=300)
 
     imported_t = models.DateTimeField(verbose_name="imported_time")
 
