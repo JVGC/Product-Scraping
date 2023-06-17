@@ -9,7 +9,7 @@ class Product(models.Model):
     """Django Product Model"""
 
     code = models.CharField(max_length=100)
-    product_name = models.CharField(max_length=100)
+    product_name = models.CharField(max_length=200)
     url = models.URLField()
     image_url = models.URLField()
     barcode = models.CharField(max_length=100)
