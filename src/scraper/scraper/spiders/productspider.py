@@ -1,4 +1,3 @@
-from datetime import datetime
 from scrapy import Spider, Request
 from scrapy.http.response.html import HtmlResponse
 
@@ -22,8 +21,6 @@ class ProductSpider(Spider):
 
     def parse_product(self, response, url, product_name):
         product = ScraperItem()
-        product["imported_t"] = datetime.utcnow().isoformat() + "Z"
-        product["status"] = "imported"
         product["url"] = url
         product["code"] = response.css("p#barcode_paragraph").css("span::text").get()
         product["barcode"] = product["code"] + " (EAN / EAN-13) "
