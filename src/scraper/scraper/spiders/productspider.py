@@ -11,7 +11,7 @@ class ProductSpider(Spider):
     name = "products"
     start_urls = ["https://world.openfoodfacts.org/"]
 
-    def parse(self, response: HtmlResponse):
+    def parse(self, response: HtmlResponse, **kwargs):
         products = response.css("div#search_results").css("li")
         for product in products:
             url = response.urljoin(product.css("a::attr(href)").get())
