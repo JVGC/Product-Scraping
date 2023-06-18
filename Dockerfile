@@ -15,3 +15,7 @@ RUN python3 -m venv /py && \
 
 
 ENV PATH="/py/bin:$PATH"
+
+ENTRYPOINT ["sh", "./docker-entrypoint.sh"]
+
+CMD ["python3", "manage.py", "runserver"]

@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "django_crontab",
     "rest_framework",
     "corsheaders",
     "products.apps.ProductsConfig",
@@ -71,6 +72,8 @@ SPECTACULAR_SETTINGS = {
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
 }
+
+CRONJOBS = [("0 0 * * *", "django.core.management.call_command", ["crawl"])]
 
 ROOT_URLCONF = "django_root.urls"
 

@@ -13,3 +13,4 @@ typing_extensions==4.5.0
 Scrapy==2.9.0
 scrapy-djangoitem==1.1.1
 drf-spectacular==0.26.2
+django-crontab==0.7.1

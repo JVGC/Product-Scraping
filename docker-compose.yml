@@ -27,8 +27,17 @@ services:
       - postgres
     networks:
       - postgres
-    command: >
-      sh -c "python manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"
+  cron:
+    build:
+      context: .
+    restart: unless-stopped
+    env_file:
+    - .env
+    depends_on:
+    - postgres
+    networks:
+      - postgres
+    command: crond -f  # as a long-running foreground process
 
 networks:
   postgres:
