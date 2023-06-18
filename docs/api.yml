@@ -1,6 +1,132 @@
-openapi: 3.0.1
+openapi: 3.0.3
 info:
-  title: Fullstack Challenge 20201026
-  description: CRUD Products
-  version: '0.1'
-
+  title: Coodesh Product Scraping
+  version: 1.0.0
+  description: Coodesh Test for Backend Role
+paths:
+  /:
+    get:
+      operationId: root_retrieve
+      responses:
+        "200":
+          description: No response body
+  /products/:
+    get:
+      operationId: products_list
+      parameters:
+        - name: page
+          required: false
+          in: query
+          description: A page number within the paginated result set.
+          schema:
+            type: integer
+      tags:
+        - products
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedProductList"
+          description: ""
+  /products/{code}:
+    get:
+      operationId: products_retrieve
+      parameters:
+        - in: path
+          name: code
+          schema:
+            type: integer
+          required: true
+      tags:
+        - products
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+          description: ""
+components:
+  schemas:
+    PaginatedProductList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/Product"
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        code:
+          type: string
+          maxLength: 100
+        product_name:
+          type: string
+          maxLength: 200
+        url:
+          type: string
+          format: uri
+          maxLength: 200
+        image_url:
+          type: string
+          format: uri
+          maxLength: 200
+        barcode:
+          type: string
+          maxLength: 100
+        brands:
+          type: string
+          maxLength: 300
+        packaging:
+          type: string
+          maxLength: 300
+        quantity:
+          type: string
+          maxLength: 50
+        categories:
+          type: string
+          maxLength: 300
+        imported_t:
+          type: string
+          format: date-time
+          title: Imported_time
+        status:
+          $ref: "#/components/schemas/StatusEnum"
+      required:
+        - barcode
+        - brands
+        - categories
+        - code
+        - id
+        - image_url
+        - imported_t
+        - packaging
+        - product_name
+        - quantity
+        - url
+    StatusEnum:
+      enum:
+        - DR
+        - IM
+      type: string
+      description: |-
+        * `DR` - Drafted
+        * `IM` - Imported
