@@ -29,3 +29,6 @@ class Product(models.Model):
     status = models.CharField(
         max_length=2, choices=Status.choices, default=Status.IMPORTED
     )
+
+    class Meta:
+        ordering = ["imported_t"]
