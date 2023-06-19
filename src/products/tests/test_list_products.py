@@ -17,20 +17,18 @@ class TestListProducts(APITestCase):
         self.assertEqual(len(response.data["results"]), 0)
 
     def test_success(self):
-        product_code = 3661112502850
-        create_test_product()
+        product = create_test_product()
 
         response = self.client.get("/products/")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data["results"]), 1)
 
-        self.assertEqual(response.data["results"][0]["code"], str(product_code))
+        self.assertEqual(response.data["results"][0]["code"], str(product["code"]))
 
     def test_pagination_size(self):
         product = create_test_product()
 
-        product2_code = 3661112502850123
-        create_test_product(product2_code)
+        create_test_product(3661112502850123)
 
         response = self.client.get("/products/")
 
