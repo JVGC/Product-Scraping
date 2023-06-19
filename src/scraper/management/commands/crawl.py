@@ -3,18 +3,18 @@ from django.core.management.base import BaseCommand
 from scrapy.crawler import CrawlerProcess
 from scrapy.settings import Settings
 
-from scraper.scraper import settings as my_settings
+from scraper.scraper import settings as scraper_settings
 from scraper.scraper.spiders.productspider import ProductSpider
 
 
 class Command(BaseCommand):
     """Craw Command Class"""
 
-    help = "Release spider"
+    help = "Scrape Product"
 
     def handle(self, *args, **options):
         crawler_settings = Settings()
-        crawler_settings.setmodule(my_settings)
+        crawler_settings.setmodule(scraper_settings)
 
         process = CrawlerProcess(settings=crawler_settings)
 
