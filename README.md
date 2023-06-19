@@ -1,96 +1,86 @@
-# Backend Challenge 20220626
+# Open Food Facts Scraping
 
+A ideia desse projeto é fazer o Scraping de produtos do site [Open Food Facts](https://world.openfoodfacts.org).
 
-## Introdução
+## Table of Contents
 
-Nesse desafio trabalharemos no desenvolvimento de uma REST API que utilizará os dados do projeto Open Food Facts, um banco de dados aberto com informação nutricional de diversos produtos alimentícios.
+- [Setup](#setup)
+- [Run](#run)
+  - [Backend](#backend)
+  - [Frontend](#frontend)
+- [Seeding](#seeding)
+- [Testing](#testing)
 
-O projeto tem como objetivo dar suporte a equipe de nutricionistas da empresa Fitness Foods LC para que possam comparar de maneira rápida a informação nutricional dos alimentos da base do Open Food Facts.
+## Stack
 
-### Antes de começar
- 
-- Prepare o projeto para ser disponibilizado no Github, copiando o conteúdo deste repositório para o seu (ou utilize o fork do projeto e aponte para o Github). Confirme que a visibilidade do projeto é pública (não esqueça de colocar no readme a referência a este challenge);
-- O projeto deve utilizar a Linguagem específica na sua Vaga (caso esteja se candidatando). Por exempo: Python, R, Scala e entre outras;
-- Considere como deadline 5 dias a partir do início do desafio. Caso tenha sido convidado a realizar o teste e não seja possível concluir dentro deste período, avise a pessoa que o convidou para receber instruções sobre o que fazer.
-- Documentar todo o processo de investigação para o desenvolvimento da atividade (README.md no seu repositório); os resultados destas tarefas são tão importantes do que o seu processo de pensamento e decisões à medida que as completa, por isso tente documentar e apresentar os seus hipóteses e decisões na medida do possível.
+O projeto foi desenvolvido utilizando a linguagem **Python**, mais especificamente o framework **Django**.
 
-## O projeto
+Para o desenvolvimento da API REST, foi utilizado o pacote **Django Rest Framework** que transforma o Django de um MVC para uma API Rest.
 
-- Criar um banco de dados MongoDB usando Atlas: https://www.mongodb.com/cloud/atlas ou algum Banco de Dados SQL se não sentir confortável com NoSQL;
-- Criar uma REST API com as melhores práticas de desenvolvimento.
-- Recomendável usar Drivers oficiais para integração com o DB
+Para fazer o Scraping dos dados, foi utilizado a biblioteca **Scrapy** que facilita muito o scraping dos dados no Python. Para mais detalhes, acesse a pasta do [scraper](./src/scraper/).
 
-### Modelo de Dados:
+Além disso, foi utilizado a biblioteca **django-crontab** para abstrair a criação e a execução de comandos Cron no Django.
 
-Para a definição do modelo, consultar o arquivo [products.json](./products.json) que foi exportado do Open Food Facts, um detalhe importante é que temos dois campos personalizados para controlar a importação de produtos:
+E para finalizar o projeto, também foi utilizado biblioteca **drf-spectacular** que se integra ao Django Rest Framework e gera uma documentação utilizando Swagger automaticamente.
 
-- `imported_t`: campo do tipo `Date` com a dia e hora que foi importado;
-- `status`: campo do tipo `Enum` com os possíveis valores `draft` e `imported`;
+Todo o projeto foi desenvolvido usando Docker, como pode ver nos arquivos abaixo:
 
-### Sistema do CRON
+- [docker-compose.yml](./docker-compose.yml)
+- [Dockefile](./Dockerfile)
+- [docker-entrypoint.sh](./src/docker-entrypoint.sh)
 
-Para prosseguir com o desafio, precisaremos criar na API um sistema de atualização que vai realizar o scraping da página do [Open Food Facts](https://world.openfoodfacts.org/) uma vez ao día. Adicionar aos arquivos de configuração o melhor horário para executar a importação.
+## Banco de Dados
 
-Ao realizar o scraping do HTML, recomendamos utilizar estruturas recursivas para navegar entre a lista de produtos e acessar a página do produto com as informações adicionais necessárias como:
+Pontos muito importantes sobre a decisão de qual banco utilizar.
 
-- Código de Barras
-- Quantidade
-- Marcas
-- Embalagem
-- Categorias
+Utilizar um banco NoSQL, como o MongoDB, seria a melhor solução para guardar esses dados.
 
+Infelizmente, o Django (que é o principal ponto da vaga) não se integra facilmente ao MongoDB, e quando se integra, ele faz que o django perca muito da sua capacidade. A própria [documentação do MongoDB](https://www.mongodb.com/compatibility/mongodb-and-django), diz que para a integração com o mongo é necessário a implementação do ORM do Django utilizando outra biblioteca como o **pymongo**.
 
-Ter em conta que:
+Por esses motivos, e como a descrição do problema deixava claro que eu poderia escolher um banco SQL caso achasse melhor, achei melhor seguir com um banco de dados SQL, no caso o PostgreSQL.
 
-- Todos os produtos deverão ter os campos personalizados `imported_t` e `status`.
-- Limitar a importação a somente 100 produtos;
-- Para gerar a URL das imagens, revisar o How to do projeto em: https://wiki.openfoodfacts.org/Developer-How_To
+## Setup
 
-### A REST API
+1. Instale o [Docker.](https://docs.docker.com/engine/install/)
+2. Criar um arquivo .env na raiz do projeto e preencha baseado no arquivo de exemplo: [env.example](./.env.example).
 
-Na REST API teremos os seguintes endpoints:
+## Run
 
-- `GET /`: Retornar um Status: 200 e uma Mensagem "Fullstack Challenge 20201026"
-- `GET /products/:code`: Obter a informação somente de um produto;
-- `GET /products`: Listar todos os produtos da base de dados, utilizar o sistema de paginação para não sobrecarregar a `REQUEST`.
+### Backend
 
-## Extras
+A API roda por padrão na porta **8000**.
+Para iniciar, é só rodar:
 
-- **Diferencial 1** Configurar Docker no Projeto para facilitar o Deploy da equipe de DevOps;
-- **Diferencial 2** Configurar um sistema de alerta se tem algum falho durante o Sync dos produtos;
-- **Diferencial 3** Descrever a documentação da API utilizando o conceito de Open API 3.0;
-- **Diferencial 4** Escrever Unit Tests para os endpoints da API;
+```sh
+    docker compose up
+```
 
+## Testing
 
-## Readme do Repositório
+Django cria um banco de dados separado somente para testes e é totalmente responsável por criar e destruir ele após os testes.
 
-- Deve conter o título do projeto
-- Uma descrição sobre o projeto em frase
-- Deve conter uma lista com linguagem, framework e/ou tecnologias usadas
-- Como instalar e usar o projeto (instruções)
-- Não esqueça o [.gitignore](https://www.toptal.com/developers/gitignore)
-- Se está usando github pessoal, referencie que é um challenge by coodesh:  
+Você pode rodar os testes usando:
 
->  This is a challenge by [Coodesh](https://coodesh.com/)
+```sh
+    docker exec product-scraping-api-1 python3 manage.py test
+```
 
-## Finalização e Instruções para a Apresentação
+## Scraping
 
-Avisar sobre a finalização e enviar para correção.
+O scraper roda automaticamente baseados nas configuração do cron job setados no arquivo .env. Mesmo assim, você pode rodar ele manualmente usando:
 
-1. Confira se você respondeu o Scorecard anexado na Vaga que se candidatou;
-2. Confira se você respondeu o Mapeamento anexado na Vaga que se candidatou;
-3. Acesse [https://coodesh.com/challenges/review](https://coodesh.com/challenges/review);
-4. Adicione o repositório com a sua solução;
-5. Grave um vídeo, utilizando o botão na tela de solicitar revisão da Coodesh, com no máximo 5 minutos, com a apresentação do seu projeto. Utilize o tempo para:
-- Explicar o objetivo do desafio
-- Quais tecnologias foram utilizadas
-- Mostrar a aplicação em funcionamento
-- Foque em pontos obrigatórios e diferenciais quando for apresentar.
-6. Adicione o link da apresentação do seu projeto no README.md.
-7. Verifique se o Readme está bom e faça o commit final em seu repositório;
-8. Confira a vaga desejada;
-9. Envie e aguarde as instruções para seguir no processo. Sucesso e boa sorte. =)
+```sh
+    docker exec product-scraping-api-1 python3 manage.py crawl
+```
 
-## Suporte
+## API Documentation
 
-Use a [nossa comunidade](https://coodesh.com/desenvolvedores#community) para tirar dúvidas sobre o processo ou envie um e-mail para contato@coodesh.com.
+A documentação da API foi feito utilizando o Swagger, e foi gerada utilizando a biblioteca **drf-spectacular**.
+
+Você pode acessar o arquivo yml na pasta [/docs/api.yml](./docs/api.yml).
+
+Para gerar o arquivo novamente, é só rodar:
+
+```sh
+    docker exec product-scraping-api-1 python3 manage.py spectacular --file ../docs/api.yml
+```
