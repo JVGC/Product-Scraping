@@ -18,4 +18,4 @@ ENV PATH="/py/bin:$PATH"
 
 ENTRYPOINT ["sh", "./docker-entrypoint.sh"]
 
-CMD ["python3", "manage.py", "runserver"]
+CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]

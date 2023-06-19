@@ -3,7 +3,6 @@
 
 # If this is going to be a cron container, set up the crontab.
 if [ "$1" = crond ]; then
-  echo "HELLO WORLD"
   python3 manage.py crontab add
 fi
 
