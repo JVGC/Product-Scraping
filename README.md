@@ -2,15 +2,6 @@
 
 A ideia desse projeto é fazer o Scraping de produtos do site [Open Food Facts](https://world.openfoodfacts.org).
 
-## Table of Contents
-
-- [Setup](#setup)
-- [Run](#run)
-  - [Backend](#backend)
-  - [Frontend](#frontend)
-- [Seeding](#seeding)
-- [Testing](#testing)
-
 ## Stack
 
 O projeto foi desenvolvido utilizando a linguagem **Python**, mais especificamente o framework **Django**.
