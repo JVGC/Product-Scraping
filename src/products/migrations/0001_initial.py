@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("code", models.CharField(max_length=100)),
+                ("code", models.CharField(max_length=100, unique=True)),
                 ("product_name", models.CharField(max_length=200)),
                 ("url", models.URLField()),
                 ("image_url", models.URLField()),

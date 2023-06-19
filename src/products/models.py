@@ -8,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 class Product(models.Model):
     """Django Product Model"""
 
-    code = models.CharField(max_length=100)
+    code = models.CharField(max_length=100, unique=True)
     product_name = models.CharField(max_length=200)
     url = models.URLField()
     image_url = models.URLField()
