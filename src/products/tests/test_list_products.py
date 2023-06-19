@@ -3,7 +3,7 @@
 # pylint: disable=missing-function-docstring
 
 from rest_framework.test import APIClient, APITestCase
-from products.models import Product
+from .factories import create_test_product
 
 
 class TestListProducts(APITestCase):
@@ -18,21 +18,7 @@ class TestListProducts(APITestCase):
 
     def test_success(self):
         product_code = 3661112502850
-        product = Product.objects.create(
-            code=3661112502850,
-            barcode="3661112502850(EAN / EAN-13)",
-            status=Product.Status.IMPORTED,
-            imported_t="2020-02-07T16:00:00Z",
-            url="https://world.openfoodfacts.org/product/3661112502850",
-            product_name="Jambon de Paris cuit à l'étouffée",
-            quantity="240 g",
-            categories="Meats, Prepared meats, Hams, White hams",
-            packaging="Film en plastique, Film en plastique",
-            brands="Tradilège, Marque Repère",
-            image_url="https://static.openfoodfacts.org/images/products/366/111/250/2850/front_fr.3.400.jpg",
-        )
-
-        product.save()
+        create_test_product()
 
         response = self.client.get("/products/")
         self.assertEqual(response.status_code, 200)
@@ -41,42 +27,14 @@ class TestListProducts(APITestCase):
         self.assertEqual(response.data["results"][0]["code"], str(product_code))
 
     def test_pagination_size(self):
-        product_code = 3661112502850
-        product = Product.objects.create(
-            code=3661112502850,
-            barcode="3661112502850(EAN / EAN-13)",
-            status=Product.Status.IMPORTED,
-            imported_t="2020-02-07T16:00:00Z",
-            url="https://world.openfoodfacts.org/product/3661112502850",
-            product_name="Jambon de Paris cuit à l'étouffée",
-            quantity="240 g",
-            categories="Meats, Prepared meats, Hams, White hams",
-            packaging="Film en plastique, Film en plastique",
-            brands="Tradilège, Marque Repère",
-            image_url="https://static.openfoodfacts.org/images/products/366/111/250/2850/front_fr.3.400.jpg",
-        )
+        product = create_test_product()
 
-        product.save()
-
-        product2 = Product.objects.create(
-            code=36611125028501,
-            barcode="36611125028501(EAN / EAN-13)",
-            status=Product.Status.IMPORTED,
-            imported_t="2020-02-07T16:00:00Z",
-            url="https://world.openfoodfacts.org/product/3661112502850",
-            product_name="Jambon de Paris cuit à l'étouffée",
-            quantity="240 g",
-            categories="Meats, Prepared meats, Hams, White hams",
-            packaging="Film en plastique, Film en plastique",
-            brands="Tradilège, Marque Repère",
-            image_url="https://static.openfoodfacts.org/images/products/366/111/250/2850/front_fr.3.400.jpg",
-        )
-
-        product2.save()
+        product2_code = 3661112502850123
+        create_test_product(product2_code)
 
         response = self.client.get("/products/")
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data["results"]), 1)
 
-        self.assertEqual(response.data["results"][0]["code"], str(product_code))
+        self.assertEqual(response.data["results"][0]["code"], str(product["code"]))
