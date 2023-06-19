@@ -28,6 +28,12 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+MIDNIGHT_EVERY_DAY = "0 0 * * *"
+
+CRAWL_TIME = (
+    os.getenv("CRAWL_CRON_JOB") if os.getenv("CRAWL_CRON_JOB") else MIDNIGHT_EVERY_DAY
+)
+
 
 # Application definition
 
@@ -62,7 +68,7 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [],
     "DEFAULT_AUTHENTICATION_CLASSES": [],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
-    "PAGE_SIZE": 1 if "test" in sys.argv else 100,
+    "PAGE_SIZE": os.getenv("TEST_PAGINATION_SIZE") if "test" in sys.argv else 100,
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
@@ -73,7 +79,7 @@ SPECTACULAR_SETTINGS = {
     "SERVE_INCLUDE_SCHEMA": False,
 }
 
-CRONJOBS = [("0 0 * * *", "django.core.management.call_command", ["crawl"])]
+CRONJOBS = [(CRAWL_TIME, "django.core.management.call_command", ["crawl"])]
 
 ROOT_URLCONF = "django_root.urls"
 
