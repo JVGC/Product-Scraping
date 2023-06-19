@@ -1,4 +1,16 @@
 """ Scraper Settings """
+import os
+import logging
+
+LOG_FILENAME = "./scraper/logs/output.log"
+os.makedirs(os.path.dirname(LOG_FILENAME), exist_ok=True)
+
+logging.basicConfig(
+    filename=LOG_FILENAME,
+    format=" %(message)s",
+    level=logging.WARN,
+)
+
 BOT_NAME = "scraper"
 
 SPIDER_MODULES = ["scraper.scraper.spiders"]
@@ -26,3 +38,5 @@ ROBOTSTXT_OBEY = True
 
 # update the pipelines to this
 ITEM_PIPELINES = {"scraper.scraper.pipelines.DjangoPipeline": 300}
+
+LOG_LEVEL = "WARNING"
